@@ -13,7 +13,7 @@ setup(
         'umap-learn',
         'scipy',
         'pandas',
-        'sklearn',
+        'scikit-learn',
         'jax',
         'matplotlib'  # Assume dependencies based on your initial code
     ],
