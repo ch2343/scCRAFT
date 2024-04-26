@@ -103,7 +103,7 @@ class SCIntegrationModel(nn.Module):
                     T_loss += triplet_loss
                     V_loss += loss_VAE
                     
-                print(f"Starting Epoch {epoch+1}/{epochs}, All Losses: {all_losses}, Discriminator Loss: {D_loss}, Triplet Loss: {T_loss}, ELBO Loss: {V_loss}")
+                print(f"Starting Epoch {epoch+1}/{epochs}, All Losses: {all_losses}, Discriminator Loss: {D_loss}")
 
 def train_integration_model(adata, batch_key='batch', z_dim=256, epochs = 150, d_coef = 0.2, kl_coef = 0.005, warmup_epoch = 50):
     number_of_cells = adata.n_obs
