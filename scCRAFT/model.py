@@ -40,7 +40,7 @@ class SCIntegrationModel(nn.Module):
         self.VAE.apply(weights_init_normal)
         self.D_Z.apply(weights_init_normal)
 
-    def train_model(self, adata, batch_key, epochs=10):
+    def train_model(self, adata, batch_key, epochs, d_coef, kl_coef, warmup_epoch):
         # Optimizer for VAE (Encoder + Decoder)
         optimizer_G = optim.Adam(self.VAE.parameters(), lr=0.001, weight_decay=0.)
         # Optimizer for Discriminator
@@ -79,7 +79,7 @@ class SCIntegrationModel(nn.Module):
                     reconst_loss = torch.clamp(reconst_loss, max = 1e5)
 
                     loss_cos = (1 - torch.sum(F.normalize(x_tilde, p=2) * F.normalize(x, p=2), 1)).mean()
-                    loss_VAE = torch.mean(reconst_loss.mean() + 0.005 * kl_divergence.mean())
+                    loss_VAE = torch.mean(reconst_loss.mean() + kl_coef * kl_divergence.mean())
                     
                     for disc_iter in range(10):
                         optimizer_D_Z.zero_grad()
@@ -91,10 +91,10 @@ class SCIntegrationModel(nn.Module):
                     loss_DA = self.D_Z(z, v_true, generator = False)
                     
                     triplet_loss = create_triplets(z, labels_low, labels_high, v_true, margin = 5)
-                    if epoch < 50:
+                    if epoch < warmup_epoch:
                         all_loss = - 0 * loss_DA + 1 * loss_VAE + 1 * triplet_loss + 20 * loss_cos
                     else:
-                        all_loss = - 0.2 * loss_DA + 1 * loss_VAE + 1 * triplet_loss + 20 * loss_cos
+                        all_loss = - d_coef * loss_DA + 1 * loss_VAE + 1 * triplet_loss + 20 * loss_cos
                         
                     all_loss.backward()
                     optimizer_G.step()
@@ -105,7 +105,7 @@ class SCIntegrationModel(nn.Module):
                     
                 print(f"Starting Epoch {epoch+1}/{epochs}, All Losses: {all_losses}, Discriminator Loss: {D_loss}, Triplet Loss: {T_loss}, ELBO Loss: {V_loss}")
 
-def train_integration_model(adata, batch_key='batch', z_dim=256, epochs = 150):
+def train_integration_model(adata, batch_key='batch', z_dim=256, epochs = 150, d_coef = 0.2, kl_coef = 0.005, warmup_epoch = 50):
     number_of_cells = adata.n_obs
     number_of_batches = np.unique(adata.obs[batch_key]).shape[0]
     
@@ -122,13 +122,14 @@ def train_integration_model(adata, batch_key='batch', z_dim=256, epochs = 150):
     model = SCIntegrationModel(adata, batch_key, z_dim)
     print(epochs)
     start_time = time.time() 
-    model.train_model(adata, batch_key=batch_key, epochs=epochs)
+    model.train_model(adata, batch_key=batch_key, epochs=epochs, d_coef = d_coef, kl_coef = kl_coef, warmup_epoch = warmup_epoch)
     end_time = time.time()
     training_time = end_time - start_time
     print(f"Training completed in {training_time:.2f} seconds")
     
     model.VAE.eval()
     return model.VAE
+
 
     
 def obtain_embeddings(adata, VAE, dim = 50):
@@ -159,6 +160,5 @@ def obtain_embeddings(adata, VAE, dim = 50):
 
     # Store the PCA-reduced data back into adata.obsm
     adata.obsm['X_scCRAFT'] = X_scCRAFT_pca
-    # mainly evaluate the cASW, NMI, ARI, kBET, bLISI, true positive rate, graph connectivity.
 
     return adata
