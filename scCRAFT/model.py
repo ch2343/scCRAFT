@@ -6,8 +6,6 @@ import scanpy as sc
 import numpy as np
 import umap
 import torch.autograd as autograd
-from tqdm.notebook import tqdm
-from tqdm import tqdm
 import scipy.sparse
 import random
 from sklearn.decomposition import PCA
@@ -17,6 +15,13 @@ from typing import List
 import time
 from scCRAFT.networks import *
 from scCRAFT.utils import *
+import sys
+
+# Dynamic import of tqdm based on the environment
+if 'ipykernel' in sys.modules:
+    from tqdm.notebook import tqdm
+else:
+    from tqdm import tqdm
     
     
 # Main training class
