@@ -56,7 +56,7 @@ class SCIntegrationModel(nn.Module):
         FloatTensor = torch.cuda.FloatTensor if self.cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if self.cuda else torch.LongTensor
 
-        progress_bar = tqdm(total=epochs, desc="Overall Progress", leave=False)
+        progress_bar = tqdm(total=epochs, desc="Overall Progress", leave=True)
         for epoch in range(epochs):
                 set_seed(epoch)
                 data_loader = generate_balanced_dataloader(adata, batch_size = 512, batch_key= batch_key)
