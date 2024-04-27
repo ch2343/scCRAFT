@@ -51,3 +51,37 @@ The evaluating procedure `obtain_embeddings()` saves the integrated latent repre
 
 
 The default setting of the parameter works in general. For the real setting with little batch effects, we recommend to use a lower value such as `kl_coef = 0.0005`.
+
+## Evaluation Metrics
+### Basic Usage
+Since we adopt a few calculation with R, we have to use the robject to import the necessary calculation with R code:
+```python
+import rpy2.robjects as robjects
+from rpy2.robjects import pandas2ri
+pandas2ri.activate()
+
+#Perhaps require the library relocation (to the library contains kBET and lisi library)
+robjects.r('.libPaths(c("current path", "library location"))')
+
+rscript = '''
+library(kBET)
+library(lisi)
+'''
+robjects.r(rscript)
+kbet = robjects.r('kBET')
+lisi = robjects.r['compute_lisi']
+```
+
+```python
+calculate_metrics(adata, batch_key='batch', celltype_key='celltype', all = False,
+                       savepath=None, subsample=None, seed=0,
+                      org='human', tp_thr=3., is_raw=False, use_raw=False, n_neighbors=5, is_embed=False, embed='X_pca'
+                     )
+```
+#### Parameters in `evaluation metrics`:
+* `all`: The metrics we use. All means all the metrics we have adopted in the evaluation. The 'False' option will remove the calculation of LISI and positive cells (which is computationally slow for large datasets). *Default*: `False`.
+* `n_neighbors`: Coefficient of the KNN. *Default*: `5`. Here we can also adopt the default value of 15 in scanpy pipeline.
+* `embed`: The embedding we want to evaluate. *Default*: `X_pca`. For scCRAFT, we use 'X_scCRAFT'.
+
+The default setting of the parameter is the one we use to evaluate our model in the paper.
+
