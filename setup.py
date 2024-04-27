@@ -16,7 +16,9 @@ setup(
         'pandas',
         'scikit-learn',
         'jax',
-        'matplotlib'  # Assume dependencies based on your initial code
+        'matplotlib',
+        'anndata',
+        'scib'
     ],
     url='http://pypi.python.org/pypi/scCRAFT/',
     license='LICENSE.txt',
