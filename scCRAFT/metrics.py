@@ -197,7 +197,7 @@ def calculate_metrics(adata, batch_key='batch', celltype_key='celltype', all = F
         print('positive and true positive rate---')
         pos_rate, truepos_rate = positive_true_positive(adata, batch_key=batch_key, celltype_key=celltype_key, 
                                                         k1=20, k2=100, tp_thr=tp_thr, embed=embed)
-    df = pd.DataFrame({'ASW_label': [asw_label],
+        df = pd.DataFrame({'ASW_label': [asw_label],
                         'ARI': [ARI],
                         'NMI': [NMI],
                         '1-cLISI': [cLISI],
@@ -209,6 +209,15 @@ def calculate_metrics(adata, batch_key='batch', celltype_key='celltype', all = F
                         'pos rate': [pos_rate],
                         'true pos rate': [truepos_rate],
                         'F1 LISI': [LISI_F1]
+                      }, index=[embed])
+    else:
+        df = pd.DataFrame({'ASW_label': [asw_label],
+                        'ARI': [ARI],
+                        'NMI': [NMI],
+                        'ASW_batch': [asw_batch],
+                        'kBET Accept Rate': [kbet_score],
+                        'graph connectivity': [graph_conn],
+                        'PCR_batch': [pcr_score]
                       }, index=[embed])
     if savepath:
         df.to_csv(savepath)
