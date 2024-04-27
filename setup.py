@@ -10,6 +10,7 @@ setup(
         'torch',
         'scanpy',
         'numpy',
+        'tqdm',
         'umap-learn',
         'scipy',
         'pandas',
