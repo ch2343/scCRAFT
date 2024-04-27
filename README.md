@@ -1,4 +1,4 @@
 # scCRAFT
 
-<img src="model.png" alt="Model Architecture"  width="900" height="600"/>
+<img src="model.png" alt="Model Architecture"  width="700" height="470"/>
 
