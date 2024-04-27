@@ -31,7 +31,7 @@ adata = adata[:, adata.var['highly_variable']]
 Then scCRAFT performed the clustering, training and embedding obtaining.
 ```python
 multi_resolution_cluster(adata, resolution1 = 0.5, method = 'Leiden')
-VAE = train_integration_model(adata, batch_key = 'batch', epochs = 150, d_coef = 0.2, kl_coef = 0.0005, warmup_epoch = 20)
+VAE = train_integration_model(adata, batch_key = 'batch', epochs = 150, d_coef = 0.2, kl_coef = 0.0005, warmup_epoch = 50)
 obtain_embeddings(adata, VAE)
 
 #Visualization
@@ -44,7 +44,8 @@ The evaluating procedure `obtain_embeddings()` saves the integrated latent repre
 #### Parameters in `scCRAFT training`:
 * `method`: Method of the clustering. 'Leiden' will take more time but might provide more accurate result. *Default*: `Louvain`.
 * `resolution1`: Coefficient of the low resolution clustering. A higher low resolution might separate same cell type. *Default*: `0.5`.
-* `epochs`: Number of steps for training. *Default*: `150`. Use `training_steps=50` for datasets with batch number over 80. (Drop this manually if even more batches)
+* `epochs`: Number of steps for training. *Default*: `150`. Use `epochs=50` for datasets with batch number over 80. (Drop this manually if even more batches)
+* `warmup_epoch`: Number of steps for warm-up training. *Default*: `50`. warmup_epoch should be about 1/3 of the epochs (adjust according to the epochs choice)
 * `d_coef`: The coefficient of discriminator loss in the overall loss. Higher value means stronger mixing. *Default*: `0.2`.
 * `kl_coef`: kl divergence proportion in the VAE loss. *Default*: `0.005`. Sometimes drop it to 0.0005 (in the demo) or 0.0001 to achieve better cell conservation.
 
