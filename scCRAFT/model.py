@@ -6,6 +6,7 @@ import scanpy as sc
 import numpy as np
 import umap
 import torch.autograd as autograd
+from tqdm.notebook import tqdm
 from tqdm import tqdm
 import scipy.sparse
 import random
