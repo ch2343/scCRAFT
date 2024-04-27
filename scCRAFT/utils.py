@@ -74,15 +74,6 @@ def generate_balanced_dataloader(adata, batch_size, batch_key='batch'):
 
 # Example usage (assuming `adata` is your AnnData object):
 # data_loader = generate_balanced_dataloader(adata, batch_size=256, batch_key='batch')
-def sort_data_by_domain(x, v):
-    # Sort v and get the indices
-    sorted_indices = torch.argsort(v)
-    
-    # Sort x and v using the sorted indices
-    sorted_x = x[sorted_indices]
-    sorted_v = v[sorted_indices]
-
-    return sorted_x, sorted_v, sorted_indices
 
 def count_labels_per_batch(labels, batch_ids):
     unique_batches = batch_ids.unique()
