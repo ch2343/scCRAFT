@@ -6,6 +6,7 @@ import scanpy as sc
 import numpy as np
 import umap
 import torch.autograd as autograd
+from tqdm import tqdm
 import scipy.sparse
 import random
 from sklearn.decomposition import PCA
@@ -49,7 +50,7 @@ class SCIntegrationModel(nn.Module):
         FloatTensor = torch.cuda.FloatTensor if self.cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if self.cuda else torch.LongTensor
 
-
+        progress_bar = tqdm(total=epochs, desc="Overall Progress", leave=False)
         for epoch in range(epochs):
                 set_seed(epoch)
                 data_loader = generate_balanced_dataloader(adata, batch_size = 512, batch_key= batch_key)
@@ -60,9 +61,6 @@ class SCIntegrationModel(nn.Module):
                 T_loss = 0
                 V_loss = 0
                 for i, (x, v, labels_low, labels_high) in enumerate(data_loader):
-                    x, v, sorted_indices = sort_data_by_domain(x, v)
-                    labels_low = labels_low[sorted_indices]
-                    labels_high = labels_high[sorted_indices]
                     x = x.to(self.device)
                     v = v.to(self.device)
                     labels_low = labels_low.to(self.device)
@@ -102,8 +100,9 @@ class SCIntegrationModel(nn.Module):
                     D_loss += loss_DA
                     T_loss += triplet_loss
                     V_loss += loss_VAE
-                    
-                print(f"Starting Epoch {epoch+1}/{epochs}, All Losses: {all_losses}, Discriminator Loss: {D_loss}")
+                progress_bar.update(1)  # Increment the progress bar by one for each batch processed
+                progress_bar.set_postfix(epoch=f"{epoch+1}/{epochs}", all_loss=all_losses.item(), disc_loss=D_loss.item())
+        progress_bar.close()
 
 def train_integration_model(adata, batch_key='batch', z_dim=256, epochs = 150, d_coef = 0.2, kl_coef = 0.005, warmup_epoch = 50):
     number_of_cells = adata.n_obs
