@@ -1,4 +1,4 @@
 # scCRAFT
 
-![A simple diagram illustrate how triplet loss preserve the biological conservation and guide reliable integration](model.png)
+<img src="model.png" alt="Model Architecture"  width="300" height="200"/>
 
