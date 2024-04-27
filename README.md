@@ -25,7 +25,7 @@ adata.raw = adata
 sc.pp.filter_genes(adata, min_cells=5)
 sc.pp.normalize_per_cell(adata, counts_per_cell_after=1e4)
 sc.pp.log1p(adata)
-sc.pp.highly_variable_genes(adata, n_top_genes=2000, batch_key='Study')
+sc.pp.highly_variable_genes(adata, n_top_genes=2000, batch_key='batch')
 adata = adata[:, adata.var['highly_variable']]
 ```
 Then scCRAFT performed the clustering, training and embedding obtaining.
@@ -42,6 +42,7 @@ sc.pl.umap(adata, color=['batch', 'celltype'], frameon=False, ncols=1)
 The evaluating procedure `obtain_embeddings()` saves the integrated latent representation of cells in `adata.obsm['X_scCRAFT']` directly, which can be used for downstream integrative analysis.
 
 #### Parameters in `scCRAFT training`:
+* `method`: Method of the clustering. 'Leiden' will take more time but might provide more accurate result. *Default*: `Louvain`.
 * `resolution1`: Coefficient of the low resolution clustering. A higher low resolution might separate same cell type. *Default*: `0.5`.
 * `epochs`: Number of steps for training. *Default*: `150`. Use `training_steps=50` for datasets with batch number over 80. (Drop this manually if even more batches)
 * `d_coef`: The coefficient of discriminator loss in the overall loss. Higher value means stronger mixing. *Default*: `0.2`.
