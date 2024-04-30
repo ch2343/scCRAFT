@@ -26,6 +26,9 @@ def weights_init_normal(m):
 
 
 def generate_balanced_dataloader(adata, batch_size, batch_key='batch'):
+    if not adata.obs_names.is_unique:
+        print("Error: Indices are not unique!")
+        raise AssertionError("Indices are not unique. Please ensure the indices are unique before proceeding.")
     # Map unique batch keys to integers
     unique_batches = adata.obs[batch_key].unique()
     batch_to_int = {batch: i for i, batch in enumerate(unique_batches)}
