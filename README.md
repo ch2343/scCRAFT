@@ -47,7 +47,7 @@ The evaluating procedure `obtain_embeddings()` saves the integrated latent repre
 * `epochs`: Number of steps for training. *Default*: `150`. Use `epochs=50` for datasets with batch number over 80. (Drop this manually if even more batches)
 * `warmup_epoch`: Number of steps for warm-up training. *Default*: `50`. warmup_epoch should be about 1/3 of the epochs (adjust according to the epochs choice)
 * `d_coef`: The coefficient of discriminator loss in the overall loss. Higher value means stronger mixing. *Default*: `0.2`.
-* `kl_coef`: kl divergence proportion in the VAE loss. *Default*: `0.005`. Sometimes drop it to 0.0005 (in the demo) or 0.0001 to achieve better cell conservation.
+* `kl_coef`: kl divergence proportion in the VAE loss. *Default*: `0.005`. Sometimes drop it to 0.0005 or 0.0001 to achieve better cell conservation.
 
 
 The default setting of the parameter works in general. For the real setting with little batch effects, we recommend to use a lower value such as `kl_coef = 0.0005`.
