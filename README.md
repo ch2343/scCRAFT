@@ -31,7 +31,7 @@ adata = adata[:, adata.var['highly_variable']]
 Then scCRAFT performed the clustering, training and embedding obtaining.
 ```python
 multi_resolution_cluster(adata, resolution1 = 0.5, method = 'Leiden')
-VAE = train_integration_model(adata, batch_key = 'batch', epochs = 150, d_coef = 0.2, kl_coef = 0.0005, warmup_epoch = 50)
+VAE = train_integration_model(adata, batch_key = 'batch', epochs = 150, d_coef = 0.2, kl_coef = 0.005, warmup_epoch = 50)
 obtain_embeddings(adata, VAE)
 
 #Visualization
