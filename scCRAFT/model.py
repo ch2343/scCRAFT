@@ -37,8 +37,8 @@ class SCIntegrationModel(nn.Module):
         self.D_Z = discriminator(self.z_dim, self.v_dim)
         self.mse_loss = torch.nn.MSELoss()
 
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        
+        #self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.device = 'cpu'
         # Move models to CUDA if available
         self.VAE.to(self.device)
         self.D_Z.to(self.device)
