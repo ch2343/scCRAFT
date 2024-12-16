@@ -1,6 +1,6 @@
 # scCRAFT
  *scCRAFT (**sc**RNA-seq batch **C**orrection and **R**eliable **A**nchor-**F**ree integration with partial **T**opology)*
-<img src="model.png" alt="Model Architecture"  width="700" height="470"/>
+<img src="model.png" alt="Model Architecture"  width="600" height="470"/>
 
 ## Installation
 * Requested enviroment creation, packages including Pytorch and jax of corresponding version can be found in scVI install page: https://docs.scvi-tools.org/en/stable/installation.html
