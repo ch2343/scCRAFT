@@ -137,21 +137,20 @@ def train_integration_model(adata, batch_key='batch', z_dim=256, epochs = 150, d
 
 
     
-def obtain_embeddings(adata, VAE, dim = 50):
+def obtain_embeddings(adata, VAE, dim=50, pca=True):
     VAE.eval()
     data_loader = generate_adata_to_dataloader(adata)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     all_z = []
-    all_indices = [] 
-    #all_x_tilde =[]
+    all_indices = []
+
     for i, (x, indices) in enumerate(data_loader):
         x = x.to(device)
         batch_size = x.size(0)
-        _,_,z = VAE.encoder(x)
+        _, _, z = VAE.encoder(x)
         all_z.append(z)
         all_indices.extend(indices.tolist())
-        
-        
+
     all_z_combined = torch.cat(all_z, dim=0)
     all_indices_tensor = torch.tensor(all_indices)
     all_z_reordered = all_z_combined[all_indices_tensor.argsort()]
@@ -159,11 +158,12 @@ def obtain_embeddings(adata, VAE, dim = 50):
 
     # Create anndata object with reordered embeddings
     adata.obsm['X_scCRAFT'] = all_z_np
-    pca = PCA(n_components= dim)
-    # Fit and transform the data
-    X_scCRAFT_pca = pca.fit_transform(adata.obsm['X_scCRAFT'])
 
-    # Store the PCA-reduced data back into adata.obsm
-    adata.obsm['X_scCRAFT'] = X_scCRAFT_pca
+    if pca:
+        pca_model = PCA(n_components=dim)
+        # Fit and transform the data
+        X_scCRAFT_pca = pca_model.fit_transform(adata.obsm['X_scCRAFT'])
+        # Store the PCA-reduced data back into adata.obsm
+        adata.obsm['X_scCRAFT'] = X_scCRAFT_pca
 
     return adata
