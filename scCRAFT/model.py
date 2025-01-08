@@ -137,7 +137,10 @@ def train_integration_model(adata, batch_key='batch', z_dim=256, epochs = 150, d
 
 
     
-def obtain_embeddings(adata, VAE, dim=50, pca=True):
+def obtain_embeddings(adata, VAE, dim=50, pca=True, seed=None):
+    if seed is not None:
+        set_seed(seed)
+
     VAE.eval()
     data_loader = generate_adata_to_dataloader(adata)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
