@@ -44,7 +44,7 @@ class SCIntegrationModel(nn.Module):
         self.D_Z.to(self.device)
 
         # Initialize weights
-        set_seed(23)
+        set_seed(22)
         self.VAE.apply(weights_init_normal)
         self.D_Z.apply(weights_init_normal)
 
